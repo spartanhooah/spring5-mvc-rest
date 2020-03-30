@@ -19,13 +19,15 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CategoryServiceTest {
+public class CategoryServiceImplTest {
     private static final Long ID = 2L;
     private static final String NAME = "Jimmy";
-    private CategoryService categoryService;
 
-    @Mock CategoryRepository categoryRepository;
-    @Mock CategoryMapper categoryMapper;
+//    @InjectMocks
+    private CategoryServiceImpl categoryService;
+
+    @Mock private CategoryRepository categoryRepository;
+//    @Mock private CategoryMapper categoryMapper = CategoryMapper.INSTANCE;
 
     @Before
     public void setUp() {
