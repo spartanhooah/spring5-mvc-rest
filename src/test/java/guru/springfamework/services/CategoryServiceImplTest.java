@@ -23,11 +23,9 @@ public class CategoryServiceImplTest {
     private static final Long ID = 2L;
     private static final String NAME = "Jimmy";
 
-//    @InjectMocks
     private CategoryServiceImpl categoryService;
 
     @Mock private CategoryRepository categoryRepository;
-//    @Mock private CategoryMapper categoryMapper = CategoryMapper.INSTANCE;
 
     @Before
     public void setUp() {
