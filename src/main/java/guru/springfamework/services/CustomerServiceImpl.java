@@ -2,13 +2,11 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
-import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,18 +20,23 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository
                 .findAll()
                 .stream()
-                .map(customerMapper::customerToCustomerDTO)
+                .map(customer -> {
+                    CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
+                    customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
+
+                    return customerDTO;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public CustomerDTO getCustomerById(Long id) {
-        Optional<Customer> customerOptional = customerRepository.findById(id);
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
+                    customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
 
-        if (customerOptional.isPresent()) {
-            return customerMapper.customerToCustomerDTO(customerOptional.get());
-        } else {
-            throw new RuntimeException("Could not find a customer with the given ID: " + id);
-        }
+                    return customerDTO;
+                }).orElseThrow(RuntimeException::new);
     }
 }

@@ -20,8 +20,6 @@ public class Bootstrap implements CommandLineRunner {
     public void run(String... args) {
         buildCategories();
         buildCustomers();
-
-        System.out.println("Data loaded: " + categoryRepository.count());
     }
 
     private void buildCategories() {

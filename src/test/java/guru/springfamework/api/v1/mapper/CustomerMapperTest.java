@@ -14,11 +14,9 @@ public class CustomerMapperTest {
     public void customerToCustomerDTO() {
         Customer customer = new Customer();
         customer.setFirstName("Bob");
-        customer.setId(1L);
 
         CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
 
-        assertThat(customerDTO.getId(), is(1L));
         assertThat(customerDTO.getFirstName(), is("Bob"));
     }
 }

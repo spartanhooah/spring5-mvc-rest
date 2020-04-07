@@ -39,14 +39,12 @@ public class CustomerControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         bob = new CustomerDTO();
-        bob.setId(1L);
         bob.setFirstName("Bob");
     }
 
     @Test
     public void getAllCustomers() throws Exception {
         CustomerDTO customerDTO2 = new CustomerDTO();
-        customerDTO2.setId(2L);
         customerDTO2.setFirstName("Joe");
 
         List<CustomerDTO> customers = Arrays.asList(bob, customerDTO2);
