@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,5 +53,22 @@ public class CustomerServiceImplTest {
         CustomerDTO customerDTO = customerService.getCustomerById(ID);
 
         assertThat(customerDTO.getFirstName(), is("Bob"));
+    }
+
+    @Test
+    public void createNewCustomer() {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName("Joe");
+
+        Customer savedCustomer = new Customer();
+        savedCustomer.setFirstName(customerDTO.getFirstName());
+        savedCustomer.setId(1L);
+
+        when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
+
+        CustomerDTO savedDto = customerService.createNewCustomer(customerDTO);
+
+        assertThat(savedDto.getFirstName(), is(customerDTO.getFirstName()));
+        assertThat(savedDto.getCustomerUrl(), is("/api/v1/customers/1"));
     }
 }
