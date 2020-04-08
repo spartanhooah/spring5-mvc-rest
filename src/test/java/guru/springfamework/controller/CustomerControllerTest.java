@@ -22,10 +22,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -133,5 +135,11 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.firstName", is("Betty")))
                 .andExpect(jsonPath("$.lastName", is("Rubble")))
                 .andExpect(jsonPath("$.customerUrl", is("/api/v1/customers/1")));
+    }
+
+    @Test
+    public void deleteCustomer() throws Exception {
+        mockMvc.perform(delete("/api/v1/customers/1"))
+                .andExpect(status().isOk());
     }
 }
