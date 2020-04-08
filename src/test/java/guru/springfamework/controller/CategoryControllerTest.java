@@ -1,5 +1,6 @@
 package guru.springfamework.controller;
 
+import guru.springfamework.api.v1.exception.ResourceNotFoundException;
 import guru.springfamework.api.v1.model.CategoryDTO;
 import guru.springfamework.services.CategoryService;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static guru.springfamework.controller.CategoryController.BASE_URL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -35,7 +37,9 @@ public class CategoryControllerTest {
 
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
     }
 
     @Test
@@ -52,7 +56,7 @@ public class CategoryControllerTest {
 
         when(categoryService.getAllCategories()).thenReturn(categories);
 
-        mockMvc.perform(get("/api/v1/categories/")
+        mockMvc.perform(get(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
@@ -66,9 +70,18 @@ public class CategoryControllerTest {
 
         when(categoryService.getCategoryByName(anyString())).thenReturn(category);
 
-        mockMvc.perform(get("/api/v1/categories/Jim")
+        mockMvc.perform(get(BASE_URL + "/Jim")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(NAME)));
+    }
+
+    @Test
+    public void categoryNameNotFound() throws Exception {
+        when(categoryService.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get(CategoryController.BASE_URL + "/Foo")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

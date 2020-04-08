@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static guru.springfamework.controller.CustomerController.BASE_URL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,7 +72,7 @@ public class CustomerServiceImplTest {
         CustomerDTO savedDto = customerService.createNewCustomer(customerDTO);
 
         assertThat(savedDto.getFirstName(), is(customerDTO.getFirstName()));
-        assertThat(savedDto.getCustomerUrl(), is("/api/v1/customers/1"));
+        assertThat(savedDto.getCustomerUrl(), is(BASE_URL + "/1"));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class CustomerServiceImplTest {
         CustomerDTO savedDto = customerService.saveCustomerByDTO(1L, customerDTO);
 
         assertThat(savedDto.getFirstName(), is(customerDTO.getFirstName()));
-        assertThat(savedDto.getCustomerUrl(), is("/api/v1/customers/1"));
+        assertThat(savedDto.getCustomerUrl(), is(BASE_URL + "/1"));
     }
 
     @Test

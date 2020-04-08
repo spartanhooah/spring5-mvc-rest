@@ -1,5 +1,6 @@
 package guru.springfamework.services;
 
+import guru.springfamework.api.v1.exception.ResourceNotFoundException;
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
 import guru.springfamework.domain.Customer;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static guru.springfamework.controller.CustomerController.BASE_URL;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-                    customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
+                    customerDTO.setCustomerUrl(getCustomerUrl(customer));
 
                     return customerDTO;
                 })
@@ -35,10 +38,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findById(id)
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-                    customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
+                    customerDTO.setCustomerUrl(getCustomerUrl(customer));
 
                     return customerDTO;
-                }).orElseThrow(RuntimeException::new);
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -67,10 +70,14 @@ public class CustomerServiceImpl implements CustomerService {
 
             CustomerDTO returnDto = customerMapper.customerToCustomerDTO(customerRepository.save(customer));
 
-            returnDto.setCustomerUrl("/api/v1/customers/" + customer.getId());
+            returnDto.setCustomerUrl(getCustomerUrl(customer));
 
             return returnDto;
-        }).orElseThrow(RuntimeException::new); // TODO: implement better exception handling
+        }).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    private String getCustomerUrl(Customer customer) {
+        return BASE_URL + "/" + customer.getId();
     }
 
     @Override
@@ -83,7 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerDTO returnDto = customerMapper.customerToCustomerDTO(customer);
 
-        returnDto.setCustomerUrl("/api/v1/customers/" + savedCustomer.getId());
+        returnDto.setCustomerUrl(getCustomerUrl(savedCustomer));
 
         return returnDto;
     }
