@@ -3,16 +3,14 @@ package guru.springfamework.controller;
 import guru.springfamework.api.v1.model.CategoryDTO;
 import guru.springfamework.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(CategoryController.BASE_URL)
 @RequiredArgsConstructor
 public class CategoryController {
@@ -20,12 +18,12 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
+    public List<CategoryDTO> getAllCategories() {
+        return categoryService.getAllCategories();
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<CategoryDTO> getCategoryByName(@PathVariable String name) {
-        return new ResponseEntity<>(categoryService.getCategoryByName(name), HttpStatus.OK);
+    public CategoryDTO getCategoryByName(@PathVariable String name) {
+        return categoryService.getCategoryByName(name);
     }
 }
