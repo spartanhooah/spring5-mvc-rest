@@ -1,7 +1,7 @@
 package guru.springfamework.controller;
 
 import guru.springfamework.api.v1.model.CustomerDTO;
-import guru.springfamework.services.CustomerService;
+import guru.springfamework.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,15 +29,15 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
-    @GetMapping("{id}")
-    public CustomerDTO getCustomerById(@PathVariable Long id) {
-        return customerService.getCustomerById(id);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO createNewCustomer(@RequestBody CustomerDTO customerDTO) {
         return customerService.createNewCustomer(customerDTO);
+    }
+
+    @GetMapping("{id}")
+    public CustomerDTO getCustomerById(@PathVariable Long id) {
+        return customerService.getCustomerById(id);
     }
 
     @PutMapping("{id}")

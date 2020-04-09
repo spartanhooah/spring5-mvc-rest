@@ -2,7 +2,7 @@ package guru.springfamework.controller;
 
 import guru.springfamework.api.v1.exception.ResourceNotFoundException;
 import guru.springfamework.api.v1.model.CategoryDTO;
-import guru.springfamework.services.CategoryService;
+import guru.springfamework.service.CategoryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +32,7 @@ public class CategoryControllerTest {
 
     @Mock private CategoryService categoryService;
 
-    @InjectMocks
-    private CategoryController categoryController;
+    @InjectMocks private CategoryController categoryController;
 
     @Before
     public void setUp() {

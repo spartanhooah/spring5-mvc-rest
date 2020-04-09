@@ -2,24 +2,28 @@ package guru.springfamework.bootstrap;
 
 import guru.springfamework.domain.Category;
 import guru.springfamework.domain.Customer;
+import guru.springfamework.domain.Vendor;
 import guru.springfamework.repositories.CategoryRepository;
 import guru.springfamework.repositories.CustomerRepository;
+import guru.springfamework.repositories.VendorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 
 @Component
 @AllArgsConstructor
 public class Bootstrap implements CommandLineRunner {
-    private CategoryRepository categoryRepository;
-    private CustomerRepository customerRepository;
+    private final CategoryRepository categoryRepository;
+    private final CustomerRepository customerRepository;
+    private final VendorRepository vendorRepository;
 
     @Override
     public void run(String... args) {
         buildCategories();
         buildCustomers();
+        buildVendors();
     }
 
     private void buildCategories() {
@@ -38,11 +42,7 @@ public class Bootstrap implements CommandLineRunner {
         Category nuts = new Category();
         nuts.setName("Nuts");
 
-        categoryRepository.save(fruits);
-        categoryRepository.save(dried);
-        categoryRepository.save(fresh);
-        categoryRepository.save(exotic);
-        categoryRepository.save(nuts);
+        categoryRepository.saveAll(asList(fruits, dried, fresh, exotic, nuts));
     }
 
     private void buildCustomers() {
@@ -58,6 +58,16 @@ public class Bootstrap implements CommandLineRunner {
         kaylee.setFirstName("Kaylee");
         kaylee.setLastName("Frye");
 
-        customerRepository.saveAll(Arrays.asList(mal, inara, kaylee));
+        customerRepository.saveAll(asList(mal, inara, kaylee));
+    }
+
+    private void buildVendors() {
+        Vendor burgers = new Vendor();
+        burgers.setName("Bob's Burgers");
+
+        Vendor gyros = new Vendor();
+        gyros.setName("Tom & Jerry's");
+
+        vendorRepository.saveAll(asList(burgers, gyros));
     }
 }

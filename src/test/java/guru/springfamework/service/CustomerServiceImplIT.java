@@ -1,4 +1,4 @@
-package guru.springfamework.services;
+package guru.springfamework.service;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
@@ -6,6 +6,7 @@ import guru.springfamework.bootstrap.Bootstrap;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CategoryRepository;
 import guru.springfamework.repositories.CustomerRepository;
+import guru.springfamework.repositories.VendorRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +23,12 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CustomerServiceImplIt {
+public class CustomerServiceImplIT {
     @Autowired private CustomerRepository customerRepository;
 
     @Autowired private CategoryRepository categoryRepository;
+
+    @Autowired private VendorRepository vendorRepository;
 
     private CustomerService customerService;
 
@@ -34,7 +37,7 @@ public class CustomerServiceImplIt {
         System.out.println("Loading customer data");
         System.out.println(customerRepository.findAll().size());
 
-        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, vendorRepository);
 
         bootstrap.run();
 
@@ -48,8 +51,7 @@ public class CustomerServiceImplIt {
 
         Customer originalCustomer = customerRepository.getOne(id);
         assertThat(originalCustomer, is(notNullValue()));
-        // save original first name
-        String originalFirstName = originalCustomer.getFirstName();
+        // save original name
         String originalLastName = originalCustomer.getLastName();
 
         CustomerDTO customerDTO = new CustomerDTO();
@@ -59,9 +61,8 @@ public class CustomerServiceImplIt {
 
         Customer updatedCustomer = customerRepository.findById(id).get();
 
-        assertThat(updatedName, is(notNullValue()));
+        assertThat(updatedCustomer, is(notNullValue()));
         assertThat(updatedCustomer.getFirstName(), is(updatedName));
-        assertThat(updatedCustomer.getFirstName(), is(not(originalFirstName)));
         assertThat(updatedCustomer.getLastName(), is(originalLastName));
     }
 
@@ -74,7 +75,6 @@ public class CustomerServiceImplIt {
         assertThat(originalCustomer, is(notNullValue()));
         // save original first name
         String originalFirstName = originalCustomer.getFirstName();
-        String originalLastName = originalCustomer.getLastName();
 
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setLastName(updatedName);
@@ -83,9 +83,8 @@ public class CustomerServiceImplIt {
 
         Customer updatedCustomer = customerRepository.findById(id).get();
 
-        assertThat(updatedName, is(notNullValue()));
+        assertThat(updatedCustomer, is(notNullValue()));
         assertThat(updatedCustomer.getLastName(), is(updatedName));
-        assertThat(updatedCustomer.getLastName(), is(not(originalLastName)));
         assertThat(updatedCustomer.getFirstName(), is(originalFirstName));
     }
 

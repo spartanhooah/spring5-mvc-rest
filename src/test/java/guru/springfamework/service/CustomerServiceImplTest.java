@@ -1,4 +1,4 @@
-package guru.springfamework.services;
+package guru.springfamework.service;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerServiceImplTest {
     private static final long ID = 1L;
+
     private CustomerServiceImpl customerService;
 
     @Mock private CustomerRepository customerRepository;
@@ -65,7 +66,7 @@ public class CustomerServiceImplTest {
 
         Customer savedCustomer = new Customer();
         savedCustomer.setFirstName(customerDTO.getFirstName());
-        savedCustomer.setId(1L);
+        savedCustomer.setId(ID);
 
         when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
 
@@ -82,11 +83,11 @@ public class CustomerServiceImplTest {
 
         Customer savedCustomer = new Customer();
         savedCustomer.setFirstName(customerDTO.getFirstName());
-        savedCustomer.setId(1L);
+        savedCustomer.setId(ID);
 
         when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
 
-        CustomerDTO savedDto = customerService.saveCustomerByDTO(1L, customerDTO);
+        CustomerDTO savedDto = customerService.saveCustomerByDTO(ID, customerDTO);
 
         assertThat(savedDto.getFirstName(), is(customerDTO.getFirstName()));
         assertThat(savedDto.getCustomerUrl(), is(BASE_URL + "/1"));
@@ -94,10 +95,8 @@ public class CustomerServiceImplTest {
 
     @Test
     public void deleteCustomerById() {
-        Long id = 1L;
+        customerService.deleteCustomerById(ID);
 
-        customerRepository.deleteById(id);
-
-        verify(customerRepository, times(1)).deleteById(id);
+        verify(customerRepository, times(1)).deleteById(ID);
     }
 }

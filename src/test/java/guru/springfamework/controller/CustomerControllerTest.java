@@ -2,7 +2,7 @@ package guru.springfamework.controller;
 
 import guru.springfamework.api.v1.exception.ResourceNotFoundException;
 import guru.springfamework.api.v1.model.CustomerDTO;
-import guru.springfamework.services.CustomerService;
+import guru.springfamework.service.CustomerService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerControllerTest {
+    private final String BOB_FIRST_NAME = "Bob";
+
     private MockMvc mockMvc;
     private CustomerDTO bob;
 
@@ -48,16 +50,17 @@ public class CustomerControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new RestResponseEntityExceptionHandler())
                 .build();
+
         bob = new CustomerDTO();
-        bob.setFirstName("Bob");
+        bob.setFirstName(BOB_FIRST_NAME);
     }
 
     @Test
     public void getAllCustomers() throws Exception {
-        CustomerDTO customerDTO2 = new CustomerDTO();
-        customerDTO2.setFirstName("Joe");
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName("Joe");
 
-        List<CustomerDTO> customers = Arrays.asList(bob, customerDTO2);
+        List<CustomerDTO> customers = Arrays.asList(bob, customerDTO);
 
         when(customerService.getAllCustomers()).thenReturn(customers);
 
@@ -74,58 +77,47 @@ public class CustomerControllerTest {
         mockMvc.perform(get(BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Bob")));
+                .andExpect(jsonPath("$.firstName", is(BOB_FIRST_NAME)));
     }
 
     @Test
     public void createNewCustomer() throws Exception {
-        CustomerDTO customer = new CustomerDTO();
-        customer.setFirstName("Sue");
-        customer.setLastName("Wilkins");
-
         CustomerDTO returnDto = new CustomerDTO();
-        returnDto.setFirstName(customer.getFirstName());
-        returnDto.setLastName(customer.getLastName());
+        returnDto.setFirstName(bob.getFirstName());
+        returnDto.setLastName(bob.getLastName());
         returnDto.setCustomerUrl(BASE_URL + "/1");
 
-        when(customerService.createNewCustomer(customer)).thenReturn(returnDto);
+        when(customerService.createNewCustomer(bob)).thenReturn(returnDto);
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(customer)))
+                .content(asJsonString(bob)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName", is("Sue")))
+                .andExpect(jsonPath("$.firstName", is(BOB_FIRST_NAME)))
                 .andExpect(jsonPath("$.customerUrl", is(BASE_URL + "/1")));
     }
 
     @Test
     public void updateCustomer() throws Exception {
-        CustomerDTO customer = new CustomerDTO();
-        customer.setFirstName("Wilma");
-        customer.setLastName("Flintstone");
-
         CustomerDTO returnDto = new CustomerDTO();
-        returnDto.setFirstName(customer.getFirstName());
-        returnDto.setLastName(customer.getLastName());
+        returnDto.setFirstName(bob.getFirstName());
+        returnDto.setLastName(bob.getLastName());
         returnDto.setCustomerUrl(BASE_URL + "/1");
 
-        when(customerService.saveCustomerByDTO(anyLong(), eq(customer))).thenReturn(returnDto);
+        when(customerService.saveCustomerByDTO(anyLong(), eq(bob))).thenReturn(returnDto);
 
         mockMvc.perform(put(BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(customer)))
+                .content(asJsonString(bob)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Wilma")))
+                .andExpect(jsonPath("$.firstName", is(BOB_FIRST_NAME)))
                 .andExpect(jsonPath("$.customerUrl", is(BASE_URL + "/1")));
     }
 
     @Test
     public void patchCustomer() throws Exception {
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setFirstName("Betty");
-
         CustomerDTO returnDto = new CustomerDTO();
-        returnDto.setFirstName(customerDTO.getFirstName());
+        returnDto.setFirstName(bob.getFirstName());
         returnDto.setLastName("Rubble");
         returnDto.setCustomerUrl(BASE_URL + "/1");
 
@@ -133,9 +125,9 @@ public class CustomerControllerTest {
 
         mockMvc.perform(patch(BASE_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(customerDTO)))
+                .content(asJsonString(bob)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Betty")))
+                .andExpect(jsonPath("$.firstName", is(BOB_FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is("Rubble")))
                 .andExpect(jsonPath("$.customerUrl", is(BASE_URL + "/1")));
     }

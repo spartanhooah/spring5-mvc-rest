@@ -1,4 +1,4 @@
-package guru.springfamework.services;
+package guru.springfamework.service;
 
 import guru.springfamework.api.v1.exception.ResourceNotFoundException;
 import guru.springfamework.api.v1.mapper.CustomerMapper;
@@ -69,20 +69,19 @@ public class CustomerServiceImpl implements CustomerService {
             }
 
             CustomerDTO returnDto = customerMapper.customerToCustomerDTO(customerRepository.save(customer));
-
             returnDto.setCustomerUrl(getCustomerUrl(customer));
 
             return returnDto;
         }).orElseThrow(ResourceNotFoundException::new);
     }
 
-    private String getCustomerUrl(Customer customer) {
-        return BASE_URL + "/" + customer.getId();
-    }
-
     @Override
     public void deleteCustomerById(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    private String getCustomerUrl(Customer customer) {
+        return BASE_URL + "/" + customer.getId();
     }
 
     private CustomerDTO saveAndReturnDTO(Customer customer) {

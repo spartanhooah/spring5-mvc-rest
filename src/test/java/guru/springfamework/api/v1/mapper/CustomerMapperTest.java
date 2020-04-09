@@ -8,15 +8,26 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class CustomerMapperTest {
+    private final String BOB = "Bob";
     CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
     @Test
     public void customerToCustomerDTO() {
         Customer customer = new Customer();
-        customer.setFirstName("Bob");
+        customer.setFirstName(BOB);
 
         CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
 
-        assertThat(customerDTO.getFirstName(), is("Bob"));
+        assertThat(customerDTO.getFirstName(), is(BOB));
+    }
+
+    @Test
+    public void customerDtoToCustomer() {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName(BOB);
+
+        Customer customer = customerMapper.customerDtoToCustomer(customerDTO);
+
+        assertThat(customer.getFirstName(), is(BOB));
     }
 }

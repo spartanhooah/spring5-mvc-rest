@@ -1,7 +1,7 @@
 package guru.springfamework.controller;
 
 import guru.springfamework.api.v1.model.CategoryDTO;
-import guru.springfamework.services.CategoryService;
+import guru.springfamework.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
